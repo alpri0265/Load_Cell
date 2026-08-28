@@ -152,7 +152,7 @@ void MenuModule::update() {
         enterState(UiState::MENU);
       }
       unsigned long now = millis();
-      if (now - lastMainRefresh > 200) {
+      if (now - lastMainRefresh > 100) {
         lastMainRefresh = now;
         renderMain();
       }
