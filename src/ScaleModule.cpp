@@ -32,13 +32,22 @@ void ScaleModule::update() {
 
   float kg = hx711.get_units(1);
 
-  filterBuf[filterIndex] = kg;
-  filterIndex = (filterIndex + 1) % WEIGHT_FILTER_SIZE;
-  if (filterCount < WEIGHT_FILTER_SIZE) filterCount++;
+  if (filterCount > 0 && fabs(kg - filteredWeight) > JUMP_RESET_THRESHOLD_KG) {
+    // Різка зміна навантаження - не чекаємо, поки ковзне середнє поступово
+    // "наздожене" нове значення: одразу заповнюємо ним весь буфер.
+    for (uint8_t i = 0; i < WEIGHT_FILTER_SIZE; i++) filterBuf[i] = kg;
+    filterIndex = 0;
+    filterCount = WEIGHT_FILTER_SIZE;
+    filteredWeight = kg;
+  } else {
+    filterBuf[filterIndex] = kg;
+    filterIndex = (filterIndex + 1) % WEIGHT_FILTER_SIZE;
+    if (filterCount < WEIGHT_FILTER_SIZE) filterCount++;
 
-  float sum = 0.0f;
-  for (uint8_t i = 0; i < filterCount; i++) sum += filterBuf[i];
-  filteredWeight = sum / filterCount;
+    float sum = 0.0f;
+    for (uint8_t i = 0; i < filterCount; i++) sum += filterBuf[i];
+    filteredWeight = sum / filterCount;
+  }
 
   unsigned long now = millis();
   if (fabs(filteredWeight - stableRefWeight) > STABLE_THRESHOLD_KG) {
