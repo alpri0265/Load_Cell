@@ -18,7 +18,7 @@ constexpr uint8_t LCD_ROWS = 4;
 // ==================== Параметри ваги ====================
 constexpr float   DEFAULT_SCALE_FACTOR = 1.0f;   // одиниць HX711 на 1 кг (визначається калібруванням)
 constexpr uint8_t HX711_SAMPLES_AVG    = 5;       // усереднення при одному читанні
-constexpr uint8_t WEIGHT_FILTER_SIZE   = 4;       // розмір ковзного середнього для відображення
+constexpr uint8_t WEIGHT_FILTER_SIZE   = 2;       // розмір ковзного середнього для відображення
                                                    // (менше вікно = менший максимальний лаг для
                                                    // будь-якої зміни ваги, навіть тієї, що не долає
                                                    // JUMP_RESET_THRESHOLD_KG нижче)
